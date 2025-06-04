@@ -46,14 +46,6 @@ app.post(
 
     const orderId = randomUUID()
 
-    dispatchOrderCreated({
-      orderId,
-      amount,
-      customer: {
-        id: 'c10057d3-9828-430c-8a3a-4c357bd6f639',
-      },
-    })
-
     try {
       await db.insert(schema.orders).values({
         id: randomUUID(),
@@ -63,6 +55,14 @@ app.post(
     } catch (error) {
       console.error('Error inserting order into database:', error)
     }
+
+    dispatchOrderCreated({
+      orderId,
+      amount,
+      customer: {
+        id: 'c10057d3-9828-430c-8a3a-4c357bd6f639',
+      },
+    })
 
     return reply.status(201).send()
   }
