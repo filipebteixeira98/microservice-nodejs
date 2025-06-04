@@ -6,6 +6,7 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
+import { channels } from '../broker/channels/index.ts'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -22,14 +23,16 @@ app.post(
   {
     schema: {
       body: z.object({
-        amount: z.number(),
+        amount: z.coerce.number(),
       }),
     },
   },
-  (request, reply) => {
+  async (request, reply) => {
     const { amount } = request.body
 
     console.log('Creating order with amount:', amount)
+
+    channels.orders.sendToQueue('orders', Buffer.from('Hello World!'))
 
     return reply.status(201).send()
   }
