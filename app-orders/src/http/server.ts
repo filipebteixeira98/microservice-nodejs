@@ -14,6 +14,10 @@ app.setSerializerCompiler(serializerCompiler)
 
 app.setValidatorCompiler(validatorCompiler)
 
+app.register(fastifyCors, {
+  origin: '*',
+})
+
 app.get('/health', (request, reply) => {
   return reply.status(200).send({ status: 'OK' })
 })
