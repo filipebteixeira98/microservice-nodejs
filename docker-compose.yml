@@ -7,5 +7,14 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    ports:
+      - "6831:6831/udp" # Jaeger agent
+      - "14268:14268" # Jaeger HTTP agent
+      - "16686:16686" # Jaeger web interface
+      - "4317:4317" # Jaeger OTLP/gRPC
+      - "4318:4318" # Jaeger OTLP/HTTP
+
 volumes:
   rabbitmq_data:
