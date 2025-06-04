@@ -54,7 +54,7 @@ app.post(
 
     try {
       await db.insert(schema.orders).values({
-        id: 'randomUUID()',
+        id: randomUUID(),
         customerId: 'c10057d3-9828-430c-8a3a-4c357bd6f639',
         amount,
       })
