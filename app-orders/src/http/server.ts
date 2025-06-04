@@ -9,11 +9,31 @@ import {
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
-app.post('/orders', () => {
-  return {
-    message: 'Order created successfully',
-  }
+app.setSerializerCompiler(serializerCompiler)
+
+app.setValidatorCompiler(validatorCompiler)
+
+app.get('/health', (request, reply) => {
+  return reply.status(200).send({ status: 'OK' })
 })
+
+app.post(
+  '/orders',
+  {
+    schema: {
+      body: z.object({
+        amount: z.number(),
+      }),
+    },
+  },
+  (request, reply) => {
+    const { amount } = request.body
+
+    console.log('Creating order with amount:', amount)
+
+    return reply.status(201).send()
+  }
+)
 
 app.listen({ host: '0.0.0.0', port: 3333 }).then(() => {
   console.log('🛒[Orders] Server is running on http://localhost:3333')
