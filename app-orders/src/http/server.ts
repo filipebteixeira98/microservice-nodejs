@@ -12,6 +12,7 @@ import { channels } from '../broker/channels/index.ts'
 
 import { db } from '../db/client.ts'
 import { schema } from '../db/schema/index.ts'
+import { dispatchOrderCreated } from '../broker/messages/order-created.ts'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -41,10 +42,15 @@ app.post(
 
     console.log('Creating order with amount:', amount)
 
-    channels.orders.sendToQueue(
-      'orders',
-      Buffer.from(JSON.stringify({ amount }))
-    )
+    const orderId = randomUUID()
+
+    dispatchOrderCreated({
+      orderId,
+      amount,
+      customer: {
+        id: 'c10057d3-9828-430c-8a3a-4c357bd6f639',
+      },
+    })
 
     try {
       await db.insert(schema.orders).values({
